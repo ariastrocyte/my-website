@@ -1,0 +1,27 @@
+---
+import { SITE } from "$/config";
+import ModeLabel from "./ModeLabel.svelte";
+---
+
+<footer class="footer">
+    <nav class="nav">
+        <div>© 2025 CircuiCast</div>
+        <p class="text-xs text-gray-400 mt-2">
+            Built with <a
+                href="https://github.com/huijing/astro-ink"
+                class="underline"
+                target="_blank">Astro Ink</a
+            > &middot; Includes <a
+                href="https://github.com/ansh/jiffyreader.com"
+                class="underline"
+                target="_blank">JiffyReader</a
+            >
+        </p>
+    </nav>
+</footer>
+
+<style>
+    .footer {
+        @apply py-6 border-t;
+    }
+</style>

@@ -1,0 +1,163 @@
+---
+export const prerender = true;
+
+import { getCollection } from "astro:content";
+import DefaultPageLayout from "$/layouts/default.astro";
+import PostPreviewList from "$/components/PostPreviewList.astro";
+import Paginator from "$/components/Paginator.astro";
+import { PAGE_SIZE } from "$/config";
+
+let title = "Blog";
+let description = "All the articles posted so far...";
+
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection("blog");
+  const sortedPosts = allPosts.sort(
+    (a, b) => new Date(b.data.date) - new Date(a.data.date),
+  );
+
+  return paginate(sortedPosts, {
+    pageSize: PAGE_SIZE,
+  });
+}
+
+const { page } = Astro.props;
+
+const allCategories = [...new Set(page.data.map((post) => post.data.category))];
+---
+
+<DefaultPageLayout content={{ title, description }}>
+  <div class="category-buttons" style="margin-bottom: 1.5rem;">
+    <button data-category="All">All</button>
+    {
+      allCategories.map((category) => (
+        <button data-category={category}>{category}</button>
+      ))
+    }
+  </div>
+
+  <div id="posts-list">
+    {
+      page.data.map((post) => (
+        <div class="post-wrapper" data-category={post.data.category}>
+          <PostPreviewList posts={[post]} />
+        </div>
+      ))
+    }
+  </div>
+
+  <Paginator page={page} />
+
+  <script is:browser>
+    function setupCategoryFilter() {
+      const buttons = document.querySelectorAll("button[data-category]");
+      const posts = document.querySelectorAll(".post-wrapper");
+
+      if (!buttons.length || !posts.length) return; // 没加载好就跳过
+
+      function updateCategory(selected) {
+        // 更新按钮状态
+        buttons.forEach((btn) => {
+          btn.classList.toggle(
+            "active",
+            btn.getAttribute("data-category") === selected,
+          );
+        });
+
+        // 文章过滤
+        posts.forEach((post) => {
+          const postCat = post.getAttribute("data-category");
+          post.style.display =
+            selected === "All" || postCat === selected ? "" : "none";
+        });
+      }
+
+      // 按钮点击监听
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const selected = button.getAttribute("data-category");
+          const url = new URL(window.location);
+          url.searchParams.set("category", selected);
+          window.history.replaceState({}, "", url);
+          updateCategory(selected);
+        });
+      });
+
+      // 初始加载逻辑
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialCategory = urlParams.get("category") || "All";
+      updateCategory(initialCategory);
+    }
+
+    // 页面初次加载
+    setupCategoryFilter();
+
+    // 每次页面前端导航回来（比如从 tag 页点回来 blog）
+    window.addEventListener("astro:after-swap", () => {
+      setupCategoryFilter();
+    });
+  </script>
+</DefaultPageLayout>
+
+<style>
+  .category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-wrapper {
+    margin-bottom: 3rem;
+  }
+
+  .post-wrapper:last-child {
+    margin-bottom: 0;
+  }
+
+  .category-buttons button {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #444; /* stone-700 */
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition:
+      all 0.2s ease,
+      transform 0.1s ease;
+    background-color: #444;
+    color: #e0f2fe;
+    transform: scale(1);
+  }
+  s .category-buttons button:hover {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
+
+  .category-buttons button:active {
+    transform: scale(0.97);
+  }
+
+  .category-buttons button.active {
+    background-color: #e0f2fe;
+    color: #444;
+    box-shadow: 0 0 0 2px #4c9aff33;
+    transform: scale(1.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .category-buttons button {
+      background-color: #e0f2fe;
+      color: #444;
+    }
+
+    .category-buttons button.active {
+      background-color: #444;
+      color: #e0f2fe;
+      box-shadow: 0 0 0 2px #4c9aff33;
+    }
+  }
+</style>

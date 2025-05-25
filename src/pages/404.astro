@@ -1,0 +1,29 @@
+---
+import DefaultPageLayout from "$/layouts/default.astro"; // or whatever your layout file is
+---
+
+<DefaultPageLayout content={{ title: "404 - Page Not Found", description: "" }}>
+    <div class="not-found">
+        <h1>Oops! Looks like you’ve wandered off the map.</h1>
+        <p>There’s nothing here, but you can go back and try again.</p>
+        <a class="home-link" href="/">← Back to Home</a>
+    </div>
+</DefaultPageLayout>
+
+<style>
+    .not-found {
+        @apply text-center py-16 px-4;
+    }
+
+    .not-found h1 {
+        @apply text-4xl font-bold mb-4;
+    }
+
+    .not-found p {
+        @apply text-lg mb-6;
+    }
+
+    .home-link {
+        @apply text-theme-primary underline hover:opacity-75;
+    }
+</style>

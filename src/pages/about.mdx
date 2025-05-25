@@ -1,0 +1,32 @@
+---
+title: 'About'
+description: 'Here are something about this website!'
+---
+import DefaultPageLayout from '$/layouts/default.astro'
+import Prose from '$/components/Prose.astro'
+
+<DefaultPageLayout content={{ title: frontmatter.title, description: frontmatter.description }}>
+  <Prose>
+    <h2 class="text-xl font-bold mb-4">About this site</h2>
+    <p>
+      <strong>CircuiCast</strong> is a place exploring neurodivergent traits and experiences. It hopes to help neurodivergent people learn more about themselves and better understand each other. Allies—whether family, friends, or kind strangers—are also welcome. It offers insights and suggestions to help you listen better, support better, and just be there, meaningfully.
+    </p>
+    <p>
+      <strong>CircuiCast</strong> exists to untangle misunderstandings and gently rewire how we see difference. Let's connect like neural circuits!
+    </p>
+
+    <h2 class="text-xl font-bold mt-8 mb-4">About the author</h2>
+    <div class="flex items-start gap-6">
+      <img src="/assets/aboutauthor.png" alt="Astrocyte" class="rounded-2xl object-cover" style="width: 10rem; height: 10rem; max-width: 100%;"/>
+      <div>
+        <p>
+          <strong>Hello, I'm Aria Pan</strong>, and my pseudonym is <strong>Astrocyte</strong>—-a glial cell in the brain. Star-shaped, quiet, but essential. They don’t fire signals like neurons do, but they nourish, support, and hold everything together, and that’s the kind of presence I want to be, subtle but steady. Also, it has beautiful syllables, I like 'astro-' and '-cyte', so I like 'Astrocyte'!
+        </p>
+        <p>
+          I’m currently walking the winding road through pre-med, drawn by a fierce love for psychiatry and the inner workings of the mind. I'm here to write about my curiousity, passion and concerns, and I hope they can help the world become a better place!
+        </p>
+      </div>
+    </div>
+  </Prose>
+</DefaultPageLayout>
+

@@ -1,0 +1,105 @@
+<!-- 
+  JiffyReader-like bionic reading enhancement
+  Based on original idea/code by JiffyReader (https://github.com/ansh/jiffyreader)
+  This implementation is adapted for static Astro sites.
+-->
+<body class="font-sans antialiased min-h-screen bg-gray-100 dark:bg-gray-800">
+    <svg
+        class="absolute w-full fill-theme-primary dark:fill-theme-dark-primary opacity-10 -z-10"
+        viewBox="0 0 960 540"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        version="1.1"
+        ><path
+            d="M0 81L26.7 86.5C53.3 92 106.7 103 160 99.3C213.3 95.7 266.7 77.3 320 66.3C373.3 55.3 426.7 51.7 480 49.7C533.3 47.7 586.7 47.3 640 45.2C693.3 43 746.7 39 800 51C853.3 63 906.7 91 933.3 105L960 119L960 0L933.3 0C906.7 0 853.3 0 800 0C746.7 0 693.3 0 640 0C586.7 0 533.3 0 480 0C426.7 0 373.3 0 320 0C266.7 0 213.3 0 160 0C106.7 0 53.3 0 26.7 0L0 0Z"
+            stroke-linecap="round"
+            stroke-linejoin="miter"></path></svg
+    >
+    <div class="transition-colors">
+        <main class="mx-auto max-w-4xl px-4 md:px-0">
+            <slot />
+        </main>
+    </div>
+    <!-- JiffyReader按钮 -->
+    <button
+        id="jiffy-toggle"
+        style="
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    z-index: 9999;
+    font-size: 1rem;
+    border-radius: 8px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+"
+    >
+        Toggle JiffyReader
+    </button>
+    <script>
+        function setupJiffyReader() {
+            const isElementVisible = (el) => el.offsetParent !== null;
+
+            const bionicify = (text) => {
+                return text
+                    .split(/\b/)
+                    .map((word) => {
+                        if (word.length < 3) return word;
+                        const mid = Math.ceil(word.length / 2);
+                        return `<b>${word.slice(0, mid)}</b>${word.slice(mid)}`;
+                    })
+                    .join("");
+            };
+
+            const walk = (node) => {
+                if (node.nodeType === 3) {
+                    const parent = node.parentElement;
+                    if (!parent || !isElementVisible(parent)) return;
+                    const text = node.nodeValue.trim();
+                    if (text && !parent.closest("code, pre, script, style")) {
+                        const span = document.createElement("span");
+                        span.innerHTML = bionicify(text);
+                        parent.replaceChild(span, node);
+                    }
+                } else if (node.nodeType === 1 && node.childNodes) {
+                    Array.from(node.childNodes).forEach(walk);
+                }
+            };
+
+            const revert = () => {
+                document.querySelectorAll("span").forEach((span) => {
+                    if (span.querySelector("b")) {
+                        const text = span.textContent;
+                        span.replaceWith(document.createTextNode(text));
+                    }
+                });
+            };
+
+            const apply = () => walk(document.body);
+
+            const toggleBtn = document.getElementById("jiffy-toggle");
+            if (!toggleBtn) return;
+
+            const state = localStorage.getItem("jiffy-enabled") === "true";
+            if (state) apply();
+
+            toggleBtn.addEventListener("click", () => {
+                const isEnabled =
+                    localStorage.getItem("jiffy-enabled") === "true";
+                if (isEnabled) {
+                    revert();
+                    localStorage.setItem("jiffy-enabled", "false");
+                } else {
+                    apply();
+                    localStorage.setItem("jiffy-enabled", "true");
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", setupJiffyReader);
+        document.addEventListener("astro:after-swap", setupJiffyReader);
+    </script>
+</body>

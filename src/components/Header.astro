@@ -1,0 +1,65 @@
+---
+import { SITE } from "$/config";
+import SvgIcon from "./SvgIcon.astro";
+import ModeSwitcherBtn from "./ModeSwitcherBtn.svelte";
+import SearchBtn from "./SearchBtn.svelte";
+---
+
+<header class="header">
+    <div class="header__logo">
+        <a href="/" class="avatar">
+            <img
+                class="header__logo-img"
+                src="/public/assets/ohhhh.png"
+                alt="logo"
+            />
+        </a>
+    </div>
+    <div class="header__meta flex-1">
+        <h3 class="header__title dark:text-theme-dark-secondary">
+            <a href="/">{SITE.name}</a>
+        </h3>
+        <div class="header__meta-more flex">
+            <p class="header__desc">
+                {SITE.description}
+            </p>
+            <nav class="header__nav flex">
+                <ul class="header__ref-list">
+                    <li>
+                        <SearchBtn client:visible />
+                    </li>
+                    <li>
+                        <a href="/rss.xml" title="RSS">
+                            <SvgIcon>
+                                <path d="M4 11a9 9 0 0 1 9 9"></path>
+                                <path d="M4 4a16 16 0 0 1 16 16"></path>
+                                <circle cx="5" cy="19" r="1"></circle>
+                            </SvgIcon>
+                        </a>
+                    </li>
+                    <li>
+                        <ModeSwitcherBtn client:visible />
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <style>
+        .header {
+            @apply flex gap-2 items-center border-b py-3 /* border-gray-200 dark:border-gray-700 - check styles/global.css */;
+        }
+        .header__logo-img {
+            @apply w-72 h-72 object-cover mr-2;
+        }
+        .header__title {
+            @apply text-4xl font-extrabold md:text-5xl text-theme-secondary dark:text-theme-dark-secondary;
+        }
+        .header__desc {
+            @apply text-xl flex-1 dark:text-gray-200;
+        }
+        .header__ref-list {
+            @apply flex gap-3 text-gray-400;
+        }
+    </style>
+</header>
