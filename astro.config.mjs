@@ -1,46 +1,40 @@
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+import { defineConfig } from 'astro/config';
 import svelte from '@astrojs/svelte';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
-import { defineConfig } from "astro/config";
-import vercel from "@astrojs/vercel/serverless";
-import markdoc from "@astrojs/markdoc";
+import markdoc from '@astrojs/markdoc';
+import remarkCodeTitles from 'remark-code-titles';
+import decapCmsOauth from 'astro-decap-cms-oauth';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-import remarkCodeTitles from 'remark-code-titles'
-import decapCmsOauth from "astro-decap-cms-oauth";
 
-// Full Astro Configuration API Documentation:
-// https://docs.astro.build/reference/configuration-reference
+export default defineConfig({
+  base: '/my-website/', // ⚠️ 改成你的 repo 名
+  output: 'static',     // ⚠️ GitHub Pages 只能用 static
+  site: 'https://ariastrocyte.github.io/my-website', // ⚠️ 改成你自己的 GitHub Pages 網址
 
-// https://astro.build/config
-export default defineConfig( /** @type {import('astro').AstroUserConfig} */{
-  output: 'server',
-  site: 'https://astro-ink.vercel.app', // Your public domain, e.g.: https://my-site.dev/. Used to generate sitemaps and canonical URLs.
-  server: {
-    // port: 4321, // The port to run the dev server on.
-  },
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'css-variables',
     },
-    remarkPlugins: [
-      remarkCodeTitles
-    ]
+    remarkPlugins: [remarkCodeTitles],
   },
+
   integrations: [
-    mdx(), 
+    mdx(),
     markdoc(),
-    svelte(), 
-    tailwind({
-      applyBaseStyles: false,
-    }), 
+    svelte(),
+    tailwind({ applyBaseStyles: false }),
     sitemap(),
     decapCmsOauth()
   ],
+
   vite: {
     plugins: [],
     resolve: {
@@ -51,6 +45,5 @@ export default defineConfig( /** @type {import('astro').AstroUserConfig} */{
     optimizeDeps: {
       allowNodeBuiltins: true
     }
-  },
-  adapter: vercel()
+  }
 });

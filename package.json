@@ -2,6 +2,7 @@
   "name": "astro-ink",
   "version": "2.0.0",
   "private": true,
+  "homepage": "https://ariastrocyte.github.io/my-website",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -11,6 +12,8 @@
     "preview": "astro preview",
     "check:type": "tsc --project tsconfig.json --pretty --noEmit",
     "lint": "biome lint src",
+    "predeploy": "astro build",
+    "deploy": "gh-pages -d dist",
     "format": "biome format src --write",
     "cz": "cz"
   },
@@ -30,6 +33,7 @@
     "astro-icon": "^0.8.2",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
+    "gh-pages": "^6.3.0",
     "globby": "^14.0.0",
     "gray-matter": "^4.0.3",
     "lunr": "^2.3.9",
