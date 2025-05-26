@@ -34,7 +34,11 @@ const AUTHOR_AVATAR = content.authorImage ? content.authorImage : SITE?.authorIm
     <MainLayout>
         <div class="post__header">
             <div class="post__tags">
-                { content.tags.length > 0 && content.tags.map(tag => <a class="post__tag" href={`/tags/${tag}`} title={tag}>{tag}</a>) }
+                { Array.isArray(content.tags) && content.tags.length > 0 &&
+                  content.tags.map(tag => (
+                    <a class="post__tag" href={`/tags/${tag}`} title={tag}>{tag}</a>
+                  ))
+                }
             </div>
             <h1 class="post__title">{ content.title }</h1>
             <h5 class={`post__desc ${AUTHOR_AVATAR ? 'flex flex-row gap-2' : ''}`}>
@@ -48,7 +52,7 @@ const AUTHOR_AVATAR = content.authorImage ? content.authorImage : SITE?.authorIm
                     <span class="post__stats">
                         { USE_VIEW_STATS && ` | `}
                         { USE_VIEW_STATS && 
-                            <Icon class="w-5 h-5 inline-block" pack="mdi" name="eye" />
+                            <!-- <Icon class="w-5 h-5 inline-block" pack="mdi" name="eye" /> -->
                             <PostStats slug={meta?.slug} client:load /> 
                         }
                     </span>

@@ -8,7 +8,6 @@ import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 import markdoc from '@astrojs/markdoc';
 import remarkCodeTitles from 'remark-code-titles';
-import decapCmsOauth from 'astro-decap-cms-oauth';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +31,6 @@ export default defineConfig({
     svelte(),
     tailwind({ applyBaseStyles: false }),
     sitemap(),
-    decapCmsOauth()
   ],
 
   vite: {

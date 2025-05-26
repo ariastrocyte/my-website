@@ -17,3 +17,9 @@ export const GET: APIRoute = async ({ params, request }) => {
 		}),
 	);
 };
+export async function getStaticPaths() {
+	return [
+		{ params: { slug: "example-post-1" } },
+		{ params: { slug: "example-post-2" } },
+	];
+}
